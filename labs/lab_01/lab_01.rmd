@@ -1,0 +1,81 @@
+---
+title: "lab_01"
+author: "Derek Willis"
+date: "2025-01-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Turn off scientific notation
+options(scipen=999)
+```
+
+## About this lab
+
+To complete this lab, you need to: \* run existing code as directed (look for **Task**). \* modify existing code as directed (look for **Task**). \* write code in empty codeblocks provided to answer questions included (look for **Q**). \* write out the answer in the form of a complete sentence in the space given (look for **A**). When you are finished, commit changes and push to your personal GitHub repo, then submit the URL to this document on ELMS.
+
+Remember to add any new verbs or concepts to your class reference notebook!
+
+## Load libraries and establish settings
+
+**Task** Run the codeblock below to load the Tidyverse. To run the codeblock, hit the little green play button in the upper right corner of the gray area (the codeblock) below.
+
+```{r}
+# Load the tidyverse. If you have not installed the tidyverse already, remove the # from the next line and run it first.  
+# install.packages('tidyverse')
+library(tidyverse)
+```
+
+## Load Data
+
+We're going to load the UMD courses data.
+
+**Task** Run the codeblock below to load the data, which is contained in an RDS file.
+
+```{r}
+umd_courses <- read_rds("lab_01.rds")
+```
+
+## Answer questions
+
+**Q1** Which department has the highest mean (average) number of seats for its classes? You need to show the department with the highest average first. Which one is the most surprising/interesting to you? **A1** I was surprised how Computer Science wasnt in the top of the departments because it is a very popular major 
+
+```{r}
+umd_courses |>
+  group_by(department)|>
+  summarise(
+    count_classes = n(),
+   mean_seats = mean(seats, na.rm = TRUE)
+  )|>
+ arrange(desc(mean_seats))
+```
+
+**Q2** Find out the greatest number of times any individual class has been offered in our dataset. Your code must show the greatest number of classes first.
+**A2** Doctoral Dissertation Research
+
+```{r}
+umd_courses |>
+  count(title)|>
+  arrange(desc(n)) 
+```
+**Q3** Count the number of courses for each instructor and department. Which instructor has taught the most?
+**A3** Instructor TBA has the most
+```{r}
+umd_courses|>
+  count(instructors)|>
+  arrange(desc(n))
+
+```
+**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4**
+  Not adding the word department i think lol. I found the answer eventually but it took lots of thinking of what the question was asking me. Im pretty confident in my answer because all the instructors are organized by the number
+**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5**
+Yes because each year the numbers for each big semester like fall and spring have bigger numbers each time or around the same big number.
+How has the number of courses offered changed across different terms — are more classes being added over time, or fewer?
+The course fluctuate through the year. In the fall and spring they skyrocket with big numbers and winter and summers have low numbers
+
+```{r}
+umd_courses|>
+  count(term)|>
+arrange(term)
+```
