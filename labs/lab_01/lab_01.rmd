@@ -47,7 +47,7 @@ umd_courses |>
   group_by(department)|>
   summarise(
     count_classes = n(),
-   mean_seats = mean(seats, na.rm = TRUE)
+   mean_seats = mean(seats)
   )|>
  arrange(desc(mean_seats))
 ```
@@ -57,21 +57,31 @@ umd_courses |>
 
 ```{r}
 umd_courses |>
-  count(title)|>
-  arrange(desc(n)) 
+  group_by(id)|>
+  summarise(
+    course_count=n()
+  ) |>
+  arrange(desc(course_count))
 ```
 **Q3** Count the number of courses for each instructor and department. Which instructor has taught the most?
 **A3** Instructor TBA has the most
 ```{r}
 umd_courses|>
   count(instructors)|>
-  arrange(desc(n))
+   arrange(desc(n))
+
 
 ```
-**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? **A4**
+**Q4** Given the results for Q3, what would have made it easier to find the answer? You don't have to know *how* to accomplish this; I want you to describe in words what would make the answer easier to see. How confident are you that the answer you got is the right one, and why? 
+
+**A4**
   Not adding the word department i think lol. I found the answer eventually but it took lots of thinking of what the question was asking me. Im pretty confident in my answer because all the instructors are organized by the number
-**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting? **A5**
+
+**Q5** Take one of the questions you listed in the final question of the pre_lab and try to answer it here in code. If you don't know how to fully answer it, write what code you can and describe in words what else you would need to do. If you got an answer, is it interesting?
+
+**A5**
 Yes because each year the numbers for each big semester like fall and spring have bigger numbers each time or around the same big number.
+
 How has the number of courses offered changed across different terms — are more classes being added over time, or fewer?
 The course fluctuate through the year. In the fall and spring they skyrocket with big numbers and winter and summers have low numbers
 
