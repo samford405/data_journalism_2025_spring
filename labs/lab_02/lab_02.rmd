@@ -1,6 +1,6 @@
 ---
 title: "lab_02"
-author: "Sa Ford"
+author: "Sam Ford"
 date: "2025-09-20"
 output: html_document
 ---
@@ -50,12 +50,15 @@ Mechanical Engineering being higher then departments like Agricultural and Resou
 **A3.**
 
 ```{r}
- umd_courses <- fall_2024 |> 
-  filter(term == "Fall 2024")
-most_courses <- fall_2024 |>
-  group_by(department) |>
-  summarise(total_courses = n()) |>
-  arrange(desc(total_courses))
+fall_2024 <- umd_courses |> 
+  filter(term == 202408) |>               
+  group_by(department) |> 
+  summarise(
+    total_courses = n(),
+    courses_with_syllabus = sum(!is.na(syllabus_count))
+  ) |> 
+  arrange(desc(total_courses)) |> 
+  slice_head(n = 5)
 
 ```
 **Q4.** Using the Maryland campaign expenses data, change the datatype of the expenditure_date column so that it is a date and not a chr, saving the result as a new dataframe. Then create a new column for the month based on expenditure_date. Then write code that shows total amount spent each month by Wes Moore's committee (you'll need to search the data to find the exact name, and we're not looking in payee_name). Write a sentence describing the pattern of spending over time.
@@ -79,7 +82,7 @@ maryland_expenses_date <- maryland_expenses |>
     TRUE ~ "Out of state"
   )) |>
   group_by(`spending location`) |>
-  summarize(total_spent = sum(amount, na.rm = TRUE))
+  summarize(total_spent = sum(amount))
 ```
 
 **Q6.** Choose your own adventure: using either the UMD courses or campaign expenses data, ask and answer a question that is different than the previous ones. You can use one of the ones you provided in the pre_lab.
