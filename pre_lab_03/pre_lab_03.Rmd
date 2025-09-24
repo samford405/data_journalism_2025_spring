@@ -260,6 +260,7 @@ cleaned_md_grants_loans
 ### Task 10: Answer our question!
 
 **Task** Write and run code to answer our original question: which zip code has gotten the most amount of money from the Maryland Tourism Board? Where is that zip code, and does that zip code make sense to you as the top recipient? Write a sentence describing the top result. **Answer**
+Baltimore
 
 ```{r}
 cleaned_md_grants_loans |>
