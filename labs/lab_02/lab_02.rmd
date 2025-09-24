@@ -55,10 +55,10 @@ fall_2024 <- umd_courses |>
   group_by(department) |> 
   summarise(
     total_courses = n(),
-    courses_with_syllabus = sum(!is.na(syllabus_count))
+    courses_with_syllabus = sum((syllabus_count))
   ) |> 
-  arrange(desc(total_courses)) |> 
-  slice_head(n = 5)
+  arrange(desc(total_courses)) 
+
 
 ```
 **Q4.** Using the Maryland campaign expenses data, change the datatype of the expenditure_date column so that it is a date and not a chr, saving the result as a new dataframe. Then create a new column for the month based on expenditure_date. Then write code that shows total amount spent each month by Wes Moore's committee (you'll need to search the data to find the exact name, and we're not looking in payee_name). Write a sentence describing the pattern of spending over time.
