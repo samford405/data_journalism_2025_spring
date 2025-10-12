@@ -43,6 +43,7 @@ You'll need to load one data set, a CSV file of Maryland campaign expenditures l
 
 ```{r}
 # Load the Maryland expenditures data table
+maryland_expenses <- read_csv("GitHub/data_journalism_2025_spring/labs/lab_04/data/maryland_expenses.csv")
 ```
 
 ## Answer questions
@@ -56,17 +57,14 @@ You'll need to load one data set, a CSV file of Maryland campaign expenditures l
 5.  Using that `payee_clean` column in your new dataframe, calculate the total amount of Facebook spending by each committee and present the results showing the committee that spent the most first.
 
 **A1.**
+Franchot Peter Friends Of
 
 ```{r}
-library(tidyverse)
-library(readr)
-
-# Step 1: Create a dataframe of Media expenses where the payee name is not NA
 media_expenses <- maryland_expenses |>
   filter(`Expense Category` == "Media")|>
   filter(!is.na(`Payee Name`))
 
-# Step 2: Write the dataframe to a CSV file in your data folder
+
 write_csv(media_expenses, "data/media_expenses.csv")
 
 media_expenses_clean <- read_csv("media_expenses_clean.csv")
@@ -75,13 +73,15 @@ media_expenses_clean <- read_csv("media_expenses_clean.csv")
 
 **Q2.** Let's do some research on the top committees from question 1. Look up the top 10 spenders: if they are candidate committees, what offices were they running for? If they were not candidates, what issues do they seem to care about? Write some sentences answering those questions, then go the Facebook ad library ([https://www.facebook.com/ads/library/?active_status=all&ad_type=political_and_issue_ads&country=US&sort_data\\[direction\\]=desc&sort_data\\[mode\\]=relevancy_monthly_grouped&media_type=all](https://www.facebook.com/ads/library/?active_status=all&ad_type=political_and_issue_ads&country=US&sort_data%5Bdirection%5D=desc&sort_data%5Bmode%5D=relevancy_monthly_grouped&media_type=all){.uri}) and look for ads from the top spender. What do you notice about the the information provided about those ads?
 
-**A2.** The top two spenders were running for governor and lieutenant governor together. Next was a PAC that supported progressive candidates who support immigrant & working families. Fourth was another candidate for governor. Fifth was another PAC that supported candidates who did things for working families and for "the many." The sixth was a candidate running for Harford County Executive. After that was another governor and lieutenant governor running pair. Then another democratic primary governor candidate. After that was a candidate running for a county council seat in Anne Arundel county. Finally, the tenth highest spender was a republican representing Maryland District 6.
-
-The top spender, Peter Franchot, had advertising done in 2021. Any ads placed in 2022 were done by the combination slate of him and his running partner. 
+**A2.** The top spender was Peter Franchot, who began running ads in 2021.
+The second biggest spenders were another governor–lieutenant governor team. Next came a PAC backing progressive candidates focused on immigrant rights and working families, followed by another gubernatorial candidate.
+Fifth was a PAC supporting candidates who champion working people and “the many.” The rest of the top ten included a Harford County Executive candidate, two more gubernatorial campaigns, a county council candidate in Anne Arundel, and a Republican representing Maryland’s 6th District.
 
 **Q3.** Given the list of top spenders in A1 and the primary results for governor (<https://elections.maryland.gov/elections/2022/primary_results/gen_results_2022_1.html>), who is missing from that Q1 list? Did those campaigns run Facebook ads? Who are the biggest recipients of media expenses by the Democratic primary winner for governor (HINT: that person has two committees, the second one with his running mate)?
 
 **A3.**
+Those missing were Wes Moore and Aruna Miller, Dan Cox and his running partner, and Tom Perez and his running mate.
+
 
 ```{r}
   moore_ads <- media_expenses_clean |>
@@ -95,7 +95,7 @@ The top spender, Peter Franchot, had advertising done in 2021. Any ads placed in
 **Q4.** The media expense data you cleaned also has a standardized purpose column. Write code to generate a list of the committees with the total amount of spending on online advertising. How does this list compare to the one from Q1 about top Facebook spenders? Of the top 5 committees who spent the most on Facebook ads from Q1, are there any that appear to have spent *all* of their online advertising dollars on Facebook?
 
 **A4.**
-The Ball Calvin Team seems to have 
+The Ball Calvin Team seems to have spent the most in total spending. Jain  Ashwani Friends of spent the most on facebook.
 ```{r}
 media_purpose <- media_expenses_clean |>
   filter(`Expense Purpose` == "Online Advertising") |>
@@ -108,4 +108,5 @@ media_purpose <- media_expenses_clean |>
 
 **Q5** Your editor asks you to summarize your findings about spending on Facebook by Maryland political candidates. How much do we know and what don't we know? What's the best story idea you've found here?
 
-**A5**
+**A5**I think a really interesting story would be looking at how some candidates might be getting around fully disclosing what they’re actually spending, by funneling money through third-party groups. Or even taking a closer look at who’s really doing the work behind the scenes
+
