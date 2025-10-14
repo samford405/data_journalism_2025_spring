@@ -1,6 +1,6 @@
 ---
 title: "pre_lab_05.Rmd"
-author: "derek willis"
+author: "Sam Ford"
 date: "2025-01-15"
 output: html_document
 ---
@@ -97,7 +97,7 @@ You can now export that extracted table to a CSV file using the "Export" button.
 
 ### Task 5: Export the CSV file
 
-**Task** Export the CSV file to your pre_lab_05 folder and read it into R by running the following codeblock. What problems do you see with the data? **Answer**
+**Task** Export the CSV file to your pre_lab_05 folder and read it into R by running the following codeblock. What problems do you see with the data? **Answer** some things are out of place
 
 ```{r}
 fentanyl_deaths <- read_csv("tabula-Annual_2020_Drug_Intox_Report.csv") |> clean_names()
@@ -111,7 +111,7 @@ The good news is that we have data we don't have to retype. The bad news is, we 
 
 ### Task 6: Load the data without headers
 
-**Task** Load the data without headers by running the codeblock below. What problems remain? **Answer**
+**Task** Load the data without headers by running the codeblock below. What problems remain? **Answer** I would need to use reframe to fix it
 
 ```{r}
 fentanyl_deaths <- read_csv("tabula-Annual_2020_Drug_Intox_Report.csv", col_names = FALSE) |> clean_names()
@@ -123,7 +123,7 @@ Ok, now we have all the data. But we need actual headers. Let's add those using 
 
 ### Task 7: Change the headers to real names
 
-**Task** Run the codeblock below. What else do we need to do? **Answer**
+**Task** Run the codeblock below. What else do we need to do? **Answer** Filter
 
 ```{r}
 fentanyl_deaths <- read_csv("tabula-Annual_2020_Drug_Intox_Report.csv", col_names = FALSE) |> 
