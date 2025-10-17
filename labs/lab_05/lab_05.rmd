@@ -45,24 +45,44 @@ You will need to read in and clean up the data so that it can be used for analys
 
 ```{r}
 baltimore_county_calls <- read_csv("tabula-Baltimore County; Carey, Samantha log OD.csv")
-baltimore_county_calls |>
-  separate(DAT_FORMCAATSE_NBR, c("DAT_FORM","CAATSE_NBR"), " ") 
+bmore_county_calls <- baltimore_county_calls |>
+  separate(col = DAT_FORMCAATSE_NBR, into = c("DAT_FORM", "CAATSE_NBR"), sep = " ") |>
+  rename(
+    date = DAT_FORMAT,         # keep DAT_FORMAT as the date column
+    time = DAT_FORM,           # DAT_FORM becomes the time column
+    case_num = CAATSE_NBR,
+    event_type = EVTYP,
+    location = `LOC`
+  ) |>
+  mutate(date = mdy(date))   
+
 ```
 
 ## Answer questions
 
 Q1. Write code to generate the number of calls that occurred on each date. Which date in 2022 had the most overdose calls, and how many? Look at the total number of rows in your result and explore the range of dates - based on your result, do you believe there are any days with no overdose calls at all? Explain why or why not.
 
-A1.
+A1.July 14,2022 at the most of 23. I think there is a possiblity because there is only showing 329 days of reports of overdose and a calendar year is 365. But some of them could not have been reported.
 
 ```{r}
+bc_calls_date <- bmore_county_calls |>
+  filter(year(date) == 2022) |>
+  group_by(date) |>
+  count() |>
+  arrange(desc(n))
 ```
 
 Q2. You want to understand if there's a pattern in the day of the week that overdose calls are made. Add a column to your dataframe that displays what day of the week each date represents. You should search for how to do that using lubridate. Then write code to calculate the number of calls for each day of the week, and add a column to that result that calculates the percentage of all calls that occurred on each day of the week (so you want a dataframe with the day of the week, total number of calls and the percentage of calls on that day out of the total number of all calls). Describe your findings to me.
 
-A2.
+A2. The findings are kind of expected. For example both total calls and percentage both spike up a very good amount when its on the weekends compared to the weekdays
 
 ```{r}
+calls_by_day <- bmore_county_calls |>
+  mutate(day_of_week = wday(date, label, abbr)) |>  
+  group_by(day_of_week) |>
+  summarize(total_calls = n()) |>
+  mutate(percentage = round((total_calls / sum(total_calls)) * 100, 1)) |>
+  arrange(match(day_of_week, c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")))
 ```
 
 Q3. Now let's look at locations. Which ones have the most calls? How would you describe them (feel free to search for more information on them)? Is there anything about the structure of the original data that might make you less confident in the counts by location or date?
@@ -70,9 +90,20 @@ Q3. Now let's look at locations. Which ones have the most calls? How would you d
 A3.
 
 ```{r}
+bc_calls_loc <- bmore_county_calls |>
+   mutate(location = case_when(
+     str_detect(location, "PC")~"Police Precinct",
+     str_detect(location, "INNERDALE")~location,
+     str_detect(location, "MOTEL| INN")~"Motel/Inn",
+     str_detect(location, "\\&")~"Intersection",
+     TRUE~location
+   )) |>
+  group_by(location) |> 
+  count() |>
+  arrange(desc(n))
 
 ```
 
 Q4. What's the best story idea or question you've seen as a result of the work you've done in this lab?
 
-A4.
+A4. I think a good story would be to see the response times of these case. Especially comparing them to each zip code like do they happen to respond faster to better, safer neighborhoods compared to more urban, bad neighborhoods or is it the same?
