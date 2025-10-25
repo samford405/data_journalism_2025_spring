@@ -18,6 +18,7 @@ options(scipen=999)
 # load your libraries
 library(tidyverse)
 library(lubridate)
+install.packages("janitor")
 
 ```
 
@@ -34,6 +35,8 @@ cecil_911 <- read_csv("data/cecil_911.csv") |>
   glimpse()
 carroll_911 <- read_csv("data/carroll_911.csv") |>
   glimpse()
+maryland_zcta <- read_csv("data/maryland_zcta.csv") |>
+  glimpse()
 acc_911 <- bind_rows(list(allegany_911,cecil_911,carroll_911))
 ```
 
@@ -41,15 +44,16 @@ Then we'll join some demographic data with Baltimore City 911 calls and ask some
 
 ```{r}
 maryland_zcta <- read_csv("data/maryland_zcta.csv") |>
-  glimpse() |> 
-  clean_names() %>% 
-  rename(zip_code = zcta5n) %>% 
+  rename(zip_code = ZCTA5N) |>
   mutate(zip_code = as.character(zip_code))
-baltimore_911 <- read_csv("data/baltimore_911.csv") %>% 
-  glimpse() %>% 
+
+baltimore_911 <- read_csv("data/baltimore_911.csv") |>
   mutate(zip_code = as.character(zip_code))
 
 baltimore_with_pop <- left_join(baltimore_911, maryland_zcta, by = "zip_code")
+
+glimpse(baltimore_with_pop)
+
 
 ```
 
@@ -65,15 +69,28 @@ calls_by_cty <- acc_911 |>
   count() |>
   arrange(desc(n))
 ```
-```
+
 
 Q2. In your combined dataframe that you used in A1, add a column for the month of each call, then write code to show the total number of calls per county and month. Are there any outliers or noteworthy results? Describe the general pattern of the results.
 
 Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
 
-A2.
+A2. Allegany County recorded  fewer calls in January and November. Overall, call volume tended to rise during the middle of the year. While Cecil County reported a high total number of calls, its monthly distribution was more consistent, with no major spikes or dips across the year.
 
 ```{r}
+acc_911 <- acc_911 |>
+  mutate(month = month(date, label = TRUE))
+
+calls_cty_mth <- acc_911 |>
+  group_by(county, month) |>
+  count() |>
+  arrange(desc(n))
+
+calls_cty_loc <- acc_911 |>
+  group_by(county, location) |> 
+  count() |> 
+  arrange(desc(n))
+
 ```
 
 Q3. Let's turn to the Baltimore City data. You're interested in exploring calls in zip codes with a high percentage of children under 18. Write code to isolate calls in zip codes where the percentage of under 18 population is at least 75% and then show the zip code and population and how many calls occurred in each of those zip codes.
@@ -84,14 +101,46 @@ Add a column to your code that calculates the number of calls per 1,000 people f
 
 Which zip code has the highest rate of calls per 1,000 people? Find the neighborhoods in that zip code that are listed in the data - you can use group_by or distinct to do this. What are some of those neighborhoods, and what else can you tell me about the population there?
 
-A3.
+A3.The zip codes analyzed include 21201, 21202, 21205, 21213, 21216, 21217, and 21223.
+Among these, 21217 has the highest rate.
+This area includes neighborhoods such as Penn North, Harlem Park, Easterwood, and Upton. These communities are predominantly young and Black, with a high proportion of renters. As a result, homeownership is limited, which can restrict opportunities for long-term stability and personal growth.
 
 ```{r}
+bal_under_18 <- baltimore_with_pop |>
+  filter(PCT_UNDER_18 >= 75) |>
+  group_by(zip_code, POPULATION) |>
+  summarize(
+    count_calls = n()
+  ) |>
+  mutate(per_1000 = count_calls/POPULATION*1000) |>
+  arrange(desc(per_1000))
+  
+bal_neighborhoods <- baltimore_with_pop |>
+  filter(zip_code == "21217") 
 ```
 
 Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
-
-A4:
+What is the percentage amount that police were called and involved black and/or white people in each month? is there a month where one was way higher then the other? what race group was higher through the year?
+A4: Blacks were involved a lot more in every month through the year and for most moths it was significantly higher when compared to the whites.
 
 ```{r}
+
+# Add month column
+baltimore_with_pop <- baltimore_with_pop |>
+  mutate(month = month(date, label = TRUE))
+
+# Summarize calls by month and race (wide format)
+calls_by_month_race <- baltimore_with_pop |>
+  group_by(month) |>
+  summarise(
+    total_white = sum(PCT_WHITE_NON_HISPANIC, na.rm = TRUE),
+    total_black = sum(PCT_BLACK_NON_HISPANIC, na.rm = TRUE)
+  ) |>
+  arrange(month)
+
+
+
+
+calls_by_race
+
 ```
