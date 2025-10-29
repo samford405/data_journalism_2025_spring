@@ -141,6 +141,4 @@ calls_by_month_race <- baltimore_with_pop |>
 
 
 
-calls_by_race
-
 ```
