@@ -1,6 +1,6 @@
 ---
 title: "lab_07"
-author: "Derek Willis"
+author: "Sam Ford"
 date: "2025-01-16"
 output: html_document
 ---
@@ -43,7 +43,7 @@ You'll also need to load the list of American Community Survey variables from th
 **Task** load the variables from the 2021 5-year ACS (which is called "acs5") and save them to a dataframe
 
 ```{r}
-acs5_vars <- load_variables(2021, "acs5", cache = TRUE)
+acs5_vars <- load_variables(2021, "acs5")
 ```
 
 ## Answer questions
@@ -76,6 +76,22 @@ Which zip code has the highest rate of calls? Which has the lowest?
 **A3**
 
 ```{r}
+montg_calls <- read_csv("data/montgomery_2022_overdoses.csv")
+
+montg_by_zip <- montg_calls |>
+  group_by(zip) |>
+  count() |> 
+  arrange(desc(n)) |> 
+  rename(count_calls = n) |> 
+  mutate(zip = as.character(zip))
+
+md_over_18 <- get_acs(geography = "zcta", variables = c(under_18_pop = "B09021_001"), state = "MD", year = 2019) |> 
+  inner_join(montg_by_zip, by = c("GEOID" = "zip")) |>
+  rename(c(over_18_pop = estimate, zip_code = GEOID)) |>
+  select(-NAME, -variable) |> 
+  select(zip_code, count_calls, over_18_pop, moe) |>
+  mutate(calls_per_1000 = count_calls/over_18_pop*1000) |>
+  arrange(desc(calls_per_1000))
 ```
 
 **Q4** Using [CensusReporter.org](https://censusreporter.org/), examine the zip codes with the highest and lowest rates and compare and contrast their demographic profiles. Is there a story here?
@@ -87,4 +103,10 @@ Which zip code has the highest rate of calls? Which has the lowest?
 **A5**
 
 ```{r}
+md_montg <- md_over_18 |>
+  mutate(low_pop = over_18_pop - moe) |> 
+  mutate(high_pop = over_18_pop + moe)  
+  mutate(low_pop_percap =count_calls/low_pop*1000) |>
+  mutate(high_pop_percap =count_calls/high_pop*1000)
+```
 ```
