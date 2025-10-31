@@ -73,7 +73,7 @@ med_age_50 <- me_med_age |>
 
 Which zip code has the highest rate of calls? Which has the lowest?
 
-**A3**
+**A3: 20877 has the highest, 20707 has the lowest. **
 
 ```{r}
 montg_calls <- read_csv("data/montgomery_2022_overdoses.csv")
@@ -96,17 +96,17 @@ md_over_18 <- get_acs(geography = "zcta", variables = c(under_18_pop = "B09021_0
 
 **Q4** Using [CensusReporter.org](https://censusreporter.org/), examine the zip codes with the highest and lowest rates and compare and contrast their demographic profiles. Is there a story here?
 
-**A4**
+**A4: ZIP code 20707 (Laurel, MD) has a predominantly Black population, a median household income just under $100,000, and about 8.4% of residents living below the poverty line. In contrast, 20877 (Gaithersburg, MD) has a larger Hispanic population, a lower median household income of around $75,000, and a higher poverty rate of 15.4%.**
 
 **Q5** Go back to your joined dataframe from Q3 and add two more columns representing the minimum and maximum populations based on the estimate and margin of error, then calculate per capita rates for each. Do you get the same two zip codes for the highest and lowest as you did before? Does that give you more or less confidence in your answers to Q3?
 
-**A5**
+**A5: When calculated using the lower population estimate, 20877 still has the highest rate and 20707 remains the lowest. The same pattern holds when using the upper population estimate—20877 continues to have the highest rate, while 20707 has the lowest.**
 
 ```{r}
 md_montg <- md_over_18 |>
   mutate(low_pop = over_18_pop - moe) |> 
-  mutate(high_pop = over_18_pop + moe)  
-  mutate(low_pop_percap =count_calls/low_pop*1000) |>
-  mutate(high_pop_percap =count_calls/high_pop*1000)
+  mutate(high_pop = over_18_pop + moe) |>  
+  mutate(low_pop_percap = count_calls/low_pop*1000) |>
+  mutate(high_pop_percap = count_calls/high_pop*1000)
 ```
 ```
