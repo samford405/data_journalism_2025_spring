@@ -59,7 +59,6 @@ monthly_percents <- pg_od_clean |>
 percents_chart <- monthly_percents |>
   ggplot() + 
   geom_bar(aes(x = reorder(month,percent), weight = percent)) +
-  coord_flip() + 
   labs(
     title = "More 911 Overdose Calls in Cooler Months",
     x = "Month",
