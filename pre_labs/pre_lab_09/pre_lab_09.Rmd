@@ -20,7 +20,7 @@ library(janitor)
 
 ### Task 2: Get Maryland GOP statewide candidates data
 
-First, let's get some data and work with it. Let's use a simple CSV of total votes cast for four Maryland Republicans who ran for statewide office in the 2022 general election. Let's look at it.
+First, let's get some data and work with it. Let's use a simple CSV of votes cast for four Maryland Republicans who ran for statewide office in the 2022 general election. Let's look at it.
 
 **Task** Load the Maryland GOP statewide candidates CSV file
 
