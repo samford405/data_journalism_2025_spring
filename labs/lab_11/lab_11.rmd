@@ -1,6 +1,6 @@
 ---
 title: "lab_11"
-author: "Derek Willis"
+author: "Samuel fORD"
 date: "2025-01-16"
 output: html_document
 ---
@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Task** Create a codeblock and load appropriate packages and settings for this lab.
 ```{r}
-install.packages("tidytext")
 library(tidyverse)
 library(tidytext)
 library(janitor)
